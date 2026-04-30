@@ -74,17 +74,18 @@ const G = `
     --r: 12px; --rl: 20px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g900)}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g900);overflow-x:hidden}
   .df{font-family:'Playfair Display',serif}
   .card{background:var(--w);border-radius:var(--rl);box-shadow:var(--sh);border:1px solid var(--g100)}
-  .fi{width:100%;padding:11px 14px;border:1.5px solid var(--g200);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:15px;color:var(--g900);background:var(--w);transition:border-color .2s,box-shadow .2s;outline:none}
+  .fi{width:100%;padding:11px 14px;border:1.5px solid var(--g200);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:16px;color:var(--g900);background:var(--w);transition:border-color .2s,box-shadow .2s;outline:none;-webkit-appearance:none}
   .fi:focus{border-color:var(--pl);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
   .fi::placeholder{color:#94a3b8}
   .fl{display:block;font-size:13px;font-weight:600;color:var(--g700);margin-bottom:6px;letter-spacing:.02em;text-transform:uppercase}
-  .bp{background:var(--p);color:#fff;border:none;border-radius:var(--r);padding:12px 28px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+  .bp{background:var(--p);color:#fff;border:none;border-radius:var(--r);padding:12px 28px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
   .bp:hover{background:var(--pl);transform:translateY(-1px);box-shadow:var(--shm)}
   .bp:disabled{background:#94a3b8;cursor:not-allowed;transform:none;box-shadow:none}
-  .bs{background:var(--acc);color:var(--p);border:1.5px solid var(--g200);border-radius:var(--r);padding:12px 28px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+  .bs{background:var(--acc);color:var(--p);border:1.5px solid var(--g200);border-radius:var(--r);padding:12px 28px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
   .bs:hover{background:var(--g200)}
   .badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600}
   .bg{background:#dcfce7;color:#166534}
@@ -98,6 +99,33 @@ const G = `
   ::-webkit-scrollbar{width:6px}
   ::-webkit-scrollbar-track{background:var(--g100)}
   ::-webkit-scrollbar-thumb{background:var(--g200);border-radius:3px}
+
+  /* ── MOBILE NAVBAR ── */
+  .nav-links { display:flex; align-items:center; gap:4px; }
+  .nav-label { display:inline; }
+  @media(max-width:600px){
+    .nav-links { gap:2px; }
+    .nav-label { display:none; }
+    .nav-btn { padding:8px 10px !important; }
+  }
+
+  /* ── MOBILE GENERAL ── */
+  @media(max-width:600px){
+    .card { border-radius:16px; }
+    .hide-mobile { display:none !important; }
+    .stack-mobile { flex-direction:column !important; }
+    .full-mobile { width:100% !important; }
+    .pad-mobile { padding:20px !important; }
+    .form-grid { grid-template-columns:1fr !important; }
+  }
+
+  /* ── ADMIN TABLE MOBILE → CARDS ── */
+  @media(max-width:700px){
+    .admin-table thead { display:none; }
+    .admin-table tr { display:block; background:var(--w); border:1px solid var(--g200); border-radius:14px; margin-bottom:12px; padding:14px; }
+    .admin-table td { display:flex; justify-content:space-between; align-items:center; padding:6px 0 !important; border:none !important; font-size:14px; }
+    .admin-table td:before { content:attr(data-label); font-weight:600; color:var(--g500); font-size:12px; text-transform:uppercase; margin-right:8px; flex-shrink:0; }
+  }
 `;
 
 // ============================================================================
@@ -233,15 +261,15 @@ function Navbar({ view, isAdmin, onNavigate }) {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          {[['home','Inicio',null],['agendar','Citas',<Calendar size={14}/>],['pqrs','PQRS',<FileText size={14}/>]].map(([k,l,ic]) => (
-            <button key={k} onClick={() => onNavigate(k)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: 'none', cursor: 'pointer', fontFamily: 'DM Sans', fontWeight: 500, fontSize: 14, background: view === k ? 'rgba(255,255,255,.12)' : 'transparent', color: view === k ? '#fff' : 'rgba(255,255,255,.65)', transition: 'all .2s' }}>
-              {ic}{l}
+        <div className="nav-links">
+          {[['home','Inicio',<HeartPulse size={16}/>],['agendar','Citas',<Calendar size={16}/>],['pqrs','PQRS',<FileText size={16}/>]].map(([k,l,ic]) => (
+            <button key={k} onClick={() => onNavigate(k)} className="nav-btn" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, border: 'none', cursor: 'pointer', fontFamily: 'DM Sans', fontWeight: 500, fontSize: 14, background: view === k ? 'rgba(255,255,255,.12)' : 'transparent', color: view === k ? '#fff' : 'rgba(255,255,255,.65)', transition: 'all .2s' }}>
+              {ic}<span className="nav-label">{l}</span>
             </button>
           ))}
-          <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,.15)', margin: '0 8px' }} />
-          <button onClick={() => onNavigate(isAdmin ? 'admin' : 'admin-login')} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,.2)', cursor: 'pointer', fontFamily: 'DM Sans', fontWeight: 500, fontSize: 14, background: (view === 'admin' || view === 'admin-login') ? 'rgba(255,255,255,.12)' : 'transparent', color: 'rgba(255,255,255,.8)', transition: 'all .2s' }}>
-            <Settings size={14} />{isAdmin ? 'Panel' : 'Admin'}
+          <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,.15)', margin: '0 4px' }} />
+          <button onClick={() => onNavigate(isAdmin ? 'admin' : 'admin-login')} className="nav-btn" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, border: '1px solid rgba(255,255,255,.2)', cursor: 'pointer', fontFamily: 'DM Sans', fontWeight: 500, fontSize: 14, background: (view === 'admin' || view === 'admin-login') ? 'rgba(255,255,255,.12)' : 'transparent', color: 'rgba(255,255,255,.8)', transition: 'all .2s' }}>
+            <Settings size={16} /><span className="nav-label">{isAdmin ? 'Panel' : 'Admin'}</span>
           </button>
         </div>
       </div>
@@ -262,7 +290,7 @@ function HomeView({ onNavigate, appointments }) {
   return (
     <div className="ai">
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(135deg,var(--pd) 0%,var(--p) 60%,var(--pl) 100%)', borderRadius: 24, padding: 'clamp(32px,6vw,60px) clamp(24px,5vw,52px)', marginBottom: 36, position: 'relative', overflow: 'hidden', color: '#fff' }}>
+      <div style={{ background: 'linear-gradient(135deg,var(--pd) 0%,var(--p) 60%,var(--pl) 100%)', borderRadius: 20, padding: 'clamp(24px,5vw,56px) clamp(20px,5vw,52px)', marginBottom: 28, position: 'relative', overflow: 'hidden', color: '#fff' }}>
         <div style={{ position: 'absolute', top: -60, right: -60, width: 280, height: 280, background: 'rgba(255,255,255,.04)', borderRadius: '50%' }} />
         <div style={{ position: 'absolute', bottom: -40, right: 80, width: 160, height: 160, background: 'rgba(255,255,255,.04)', borderRadius: '50%' }} />
         <div style={{ position: 'relative', maxWidth: 580 }}>
@@ -276,10 +304,10 @@ function HomeView({ onNavigate, appointments }) {
             Accede a nuestros especialistas desde cualquier lugar. Sin filas, sin esperas innecesarias.
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <button className="bp" style={{ background: '#fff', color: 'var(--p)', padding: '13px 28px' }} onClick={() => onNavigate('agendar')}>
+            <button className="bp full-mobile" style={{ background: '#fff', color: 'var(--p)', padding: '13px 28px', justifyContent: 'center' }} onClick={() => onNavigate('agendar')}>
               <Calendar size={17} /> Agendar Cita
             </button>
-            <button onClick={() => onNavigate('pqrs')} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 28px', borderRadius: 12, border: '1.5px solid rgba(255,255,255,.3)', background: 'transparent', color: '#fff', fontFamily: 'DM Sans', fontWeight: 600, fontSize: 15, cursor: 'pointer' }}>
+            <button onClick={() => onNavigate('pqrs')} className="full-mobile" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px 28px', borderRadius: 12, border: '1.5px solid rgba(255,255,255,.3)', background: 'transparent', color: '#fff', fontFamily: 'DM Sans', fontWeight: 600, fontSize: 15, cursor: 'pointer' }}>
               <FileText size={17} /> Radicar PQRS
             </button>
           </div>
@@ -392,7 +420,7 @@ function AgendarView({ appointments, showToast, onNavigate }) {
         <div style={{ height: 4, background: 'linear-gradient(90deg,var(--p),var(--acc2))' }} />
         <form onSubmit={handleSubmit} style={{ padding: 36 }}>
           <SectionTitle icon={<User size={15} style={{ color: 'var(--p)' }}/>} title="Datos del Paciente" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 18, marginBottom: 24 }}>
+          <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 18, marginBottom: 24 }}>
             <FF label="Nombre Completo" name="name" value={form.name} onChange={handleChange} required placeholder="Ej. Juan García" />
             <FF label="Documento de Identidad" name="idNumber" value={form.idNumber} onChange={handleChange} required placeholder="Número de documento" />
             <FF label="Correo Electrónico" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="correo@ejemplo.com" />
@@ -410,7 +438,7 @@ function AgendarView({ appointments, showToast, onNavigate }) {
           </div>
           <div className="div" />
           <SectionTitle icon={<Calendar size={15} style={{ color: 'var(--p)' }}/>} title="Detalles de la Cita" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(190px,1fr))', gap: 18, marginBottom: 28 }}>
+          <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(190px,1fr))', gap: 18, marginBottom: 28 }}>
             <div>
               <label className="fl">Especialidad *</label>
               <select name="specialty" value={form.specialty} onChange={handleChange} required className="fi">
@@ -495,7 +523,7 @@ function PqrsView({ showToast, onNavigate }) {
               ))}
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginBottom: 18 }}>
+          <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginBottom: 18 }}>
             <FF label="Nombre Completo" name="name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required placeholder="Tu nombre" />
             <FF label="Correo de Contacto" name="email" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required placeholder="correo@ejemplo.com" />
           </div>
@@ -616,7 +644,7 @@ function AdminDashboard({ appointments, pqrsList, adminsList, isAdmin, setIsAdmi
               <input type="text" placeholder="Buscar paciente, documento, especialidad..." value={search} onChange={e => setSearch(e.target.value)} className="fi" style={{ paddingLeft: 36, fontSize: 14 }} />
             </div>
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+              <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
                 <thead>
                   <tr style={{ background: 'var(--g50)' }}>
                     {['Paciente','Especialidad','Fecha / Hora','Estado','Acción'].map(h => (
@@ -627,19 +655,19 @@ function AdminDashboard({ appointments, pqrsList, adminsList, isAdmin, setIsAdmi
                 <tbody>
                   {filtered.map(c => (
                     <tr key={c.id} style={{ borderTop: '1px solid var(--g100)' }}>
-                      <td style={{ padding: '13px 14px' }}>
+                      <td data-label="Paciente" style={{ padding: '13px 14px' }}>
                         <div style={{ fontWeight: 600 }}>{c.name}</div>
                         <div style={{ fontSize: 12, color: 'var(--g500)' }}>CC {c.idNumber} · {c.phoneCode} {c.phone}</div>
                       </td>
-                      <td style={{ padding: '13px 14px', fontWeight: 500, color: 'var(--p)' }}>{c.specialty}</td>
-                      <td style={{ padding: '13px 14px' }}>
+                      <td data-label="Especialidad" style={{ padding: '13px 14px', fontWeight: 500, color: 'var(--p)' }}>{c.specialty}</td>
+                      <td data-label="Fecha/Hora" style={{ padding: '13px 14px' }}>
                         <div style={{ fontWeight: 600 }}>{c.date}</div>
                         <div style={{ fontSize: 12, color: 'var(--g500)' }}>{c.time}</div>
                       </td>
-                      <td style={{ padding: '13px 14px' }}>
+                      <td data-label="Estado" style={{ padding: '13px 14px' }}>
                         <span className={`badge ${c.status === 'Cancelada' ? 'br' : c.status === 'Reagendada' ? 'bb' : 'bg'}`}>{c.status}</span>
                       </td>
-                      <td style={{ padding: '13px 14px' }}>
+                      <td data-label="Acción" style={{ padding: '13px 14px' }}>
                         {c.status !== 'Cancelada' && (
                           <button onClick={() => setManagingCita(c)} style={{ padding: '6px 13px', borderRadius: 8, border: '1.5px solid var(--g200)', background: '#fff', color: 'var(--g700)', fontFamily: 'DM Sans', fontWeight: 500, fontSize: 13, cursor: 'pointer' }}>Gestionar</button>
                         )}
@@ -668,7 +696,7 @@ function AdminDashboard({ appointments, pqrsList, adminsList, isAdmin, setIsAdmi
         )}
 
         {tab === 'config' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }}>
+          <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }}>
             <div>
               <h3 style={{ fontWeight: 700, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}><Shield size={17} style={{ color: 'var(--ok)' }}/> Sesión Activa</h3>
               <div style={{ background: 'var(--g50)', borderRadius: 12, padding: 18, border: '1px solid var(--g100)', fontSize: 14 }}>
